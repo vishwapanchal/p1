@@ -1,3 +1,7 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
 from backend.app.main import app
+
+# Vercel expects variable named "handler"
+handler = app
