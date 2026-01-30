@@ -43,15 +43,15 @@ app.add_middleware(
 )
 
 # Register Routers
-app.include_router(auth.router)
-app.include_router(community.router)
-app.include_router(users.router)
-app.include_router(projects.router)
-app.include_router(dashboard.router)
-app.include_router(schemes.router)
-app.include_router(proposals.router)
-app.include_router(complaints.router)
-app.include_router(official_contractor_chat.router)
+app.include_router(auth.router, prefix="/auth")
+app.include_router(community.router, prefix="/community")
+app.include_router(users.router, prefix="/users")
+app.include_router(projects.router, prefix="/projects")
+app.include_router(dashboard.router, prefix="/dashboard")
+app.include_router(schemes.router, prefix="/schemes")
+app.include_router(proposals.router, prefix="/proposals")
+app.include_router(complaints.router, prefix="/complaints")
+app.include_router(official_contractor_chat.router, prefix="/chat")
 
 @app.get("/")
 async def root():
