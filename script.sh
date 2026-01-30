@@ -1,41 +1,27 @@
 #!/bin/bash
 
-# 1. Update api/index.py with robust path resolution
-# This ensures Vercel can find the 'backend' folder regardless of execution context
+# 1. Revert api/index.py to the previous version
 cat << 'EOF' > api/index.py
-import sys
-import os
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-# Add the project root to sys.path
-# This allows 'from backend.app.main import app' to work correctly
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(current_dir)
-sys.path.append(project_root)
+from backend.app.main import app
 
-try:
-    from backend.app.main import app
-    # Vercel's Python runtime requires a 'handler' variable
-    handler = app
-except ImportError as e:
-    print(f"Import Error: {e}")
-    raise e
+# Vercel expects variable named "handler"
+handler = app
 EOF
 
-# 2. Update vercel.json to ensure correct routing
-# Using 'rewrites' is often more reliable than 'routes' in newer Vercel versions
+# 2. Revert vercel.json to use 'routes' instead of 'rewrites'
 cat << 'EOF' > vercel.json
 {
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "api/index.py"
-    }
+  "routes": [
+    { "src": "/api/(.*)", "dest": "api/index.py" }
   ]
 }
 EOF
 
-# 3. Consolidate requirements
-# Vercel looks for requirements.txt in the root directory
-cp backend/requirements.txt ./requirements.txt
+# 3. Clean up the root requirements.txt if you wish to keep it only in the backend folder
+# Uncomment the line below if you want to remove the root-level requirements file
+# rm requirements.txt
 
-echo "✅ Fixes applied: api/index.py updated, vercel.json rewritten, and requirements.txt synced."
+echo "✅ Files have been reverted to their previous state."

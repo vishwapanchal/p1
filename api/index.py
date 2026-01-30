@@ -1,16 +1,7 @@
-import sys
-import os
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-# Add the project root to sys.path
-# This allows 'from backend.app.main import app' to work correctly
-current_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.dirname(current_dir)
-sys.path.append(project_root)
+from backend.app.main import app
 
-try:
-    from backend.app.main import app
-    # Vercel's Python runtime requires a 'handler' variable
-    handler = app
-except ImportError as e:
-    print(f"Import Error: {e}")
-    raise e
+# Vercel expects variable named "handler"
+handler = app
